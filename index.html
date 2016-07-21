@@ -86,7 +86,7 @@
             // Accepts a list of string usernames
             // Passes an object with available and non-available names to callback
 
-            var apiUrl = "/coding-challenge/api/user/?username=" + usernames.join(',');
+            const apiUrl = "/coding-challenge/api/user/?username=" + usernames.join(',');
 
             $.ajax({
                 url: apiUrl,
