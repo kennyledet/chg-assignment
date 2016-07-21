@@ -5,11 +5,14 @@
     <base href="http://chegg-tutors.appspot.com/" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/public/styles.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="http://chancejs.com/chance.min.js"></script>
 
     <style type="text/css">
+        /* Styles only in same file as index due to setting <base> attribute
+           I generally avoid this practice. */
         .chg-separator {
             border: 0;
             height: 0;
@@ -19,6 +22,21 @@
         }
         .chg-username-msg {
             font-size: 17px;
+        }
+        #chg-username-suggestions {
+            list-style: none;
+            width: 350px;
+            margin-top: 27px;
+        }
+        #chg-username-suggestions li {
+            border-bottom: 1px solid rgba(197, 197, 197, 0.3);
+            text-align: left;
+        }
+        .fa-check-circle {
+            color: green;
+        }
+        .fa-exclamation-triangle {
+            color: red;
         }
     </style>
   </head>
@@ -39,16 +57,22 @@
 
     <div id="chg-balloon-results-container">
 
-        <p id="chg-username-success" class="chg-username-msg" hidden="">
-            Congrats! <span class="chg-username-query"></span> is available
-        <p>
-        <p id="chg-username-failure" class="chg-username-msg" hidden="">
-            <strong><span class="chg-username-query"></span></strong> is not available. How about one of these?
-        <p>
+        <center>
+            <p id="chg-username-success" class="chg-username-msg" hidden="">
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
 
-        <ul id="chg-username-suggestions" hidden="">
-            
-        </ul>
+                Congrats! <span class="chg-username-query"></span> is available
+            </p>
+            <p id="chg-username-failure" class="chg-username-msg" hidden="">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+
+                <strong><span class="chg-username-query"></span></strong> is not available. How about one of these:
+            </p>
+        </center>
+
+        <center>
+            <ul id="chg-username-suggestions" hidden=""></ul>
+        </center>
 
     </div>
 
@@ -92,7 +116,7 @@
 
             // Generate number based suggestions
             while (suggestions.length < 50)
-                suggestions.push(baseQuery+chance.integer({min: 2, max: 999}));
+                suggestions.push(baseQuery+chance.integer({min: 2, max: 9999}));
 
             // Generate word based suggestions
             while (suggestions.length < 100) {
@@ -140,14 +164,16 @@
                         console.log(availableAlphaNumeric);
                         console.log(availableAlpha);
 
-                        // Pick two alphanumeric, one alpha
+                        // Pick 3 random final suggestions: 2 alphanumeric, 1 alpha
                         var finalSuggestions = chance.pick(availableAlphaNumeric, 2);
                         finalSuggestions.push(chance.pick(availableAlpha));
 
                         console.log(finalSuggestions);
 
-                        // Display suggestions
+                        // Display final suggestions
+                        $("#chg-username-suggestions").empty();
                         $("#chg-username-suggestions").show();
+
                         finalSuggestions.forEach(suggestion => {
                             var listItem = "<li><p>"+suggestion+"</li></p>";
                             $("#chg-username-suggestions").append(listItem);
