@@ -115,23 +115,30 @@
         }
 
         function generateSuggestions(usernameQuery, callback) {
-            // Generates 50 randomized suggestions based on username query
+            // Generates 100 randomized suggestions based on username query
             var suggestions = [];
             var baseQuery = usernameQuery.replace(/[0-9]/g, '');
 
+            // Snip base query if it's too long, to help avoid suggestions over 18 chars
+            if (baseQuery.length > 10)
+                baseQuery = baseQuery.substr(0, 10);
+
             // Generate number based suggestions
-            while (suggestions.length < 25)
+            while (suggestions.length < 50)
                 suggestions.push(baseQuery+chance.integer({min: 2, max: 9999}));
 
             // Generate word based suggestions
-            while (suggestions.length < 50) {
+            while (suggestions.length < 100) {
                 if ( chance.bool() )
                     suggestions.push(baseQuery+chance.pickone(wordList));
                 else
                     suggestions.push(chance.pickone(wordList)+baseQuery);
             }
-            // console.log(suggestions);
 
+            // Avoid suggestions over 18 chars
+            suggestions = suggestions.filter(suggestion => { return suggestion.length <= 18 });
+
+            // console.log(suggestions);
             checkAvailability(suggestions, callback);
         }
 
