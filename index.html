@@ -115,16 +115,16 @@
         }
 
         function generateSuggestions(usernameQuery, callback) {
-            // Generates 100 randomized suggestions based on username query
+            // Generates 50 randomized suggestions based on username query
             var suggestions = [];
             var baseQuery = usernameQuery.replace(/[0-9]/g, '');
 
             // Generate number based suggestions
-            while (suggestions.length < 50)
+            while (suggestions.length < 25)
                 suggestions.push(baseQuery+chance.integer({min: 2, max: 9999}));
 
             // Generate word based suggestions
-            while (suggestions.length < 100) {
+            while (suggestions.length < 50) {
                 if ( chance.bool() )
                     suggestions.push(baseQuery+chance.pickone(wordList));
                 else
