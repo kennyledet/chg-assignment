@@ -10,12 +10,15 @@
     <script src="http://chancejs.com/chance.min.js"></script>
 
     <style type="text/css">
-        #seperator {
+        .chg-separator {
             border: 0;
             height: 0;
             border-top: 1px solid rgba(0, 0, 0, 0.1);
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            margin-top: 44px;
+            margin-top: 27px;
+        }
+        .chg-username-msg {
+            font-size: 17px;
         }
     </style>
   </head>
@@ -32,16 +35,20 @@
         <button id="chg-balloon-submit">Check availability</button>
     </div>
 
-    <hr id="seperator">
+    <hr class="chg-separator">
 
     <div id="chg-balloon-results-container">
-        <p id="chg-username-success" hidden="">
+
+        <p id="chg-username-success" class="chg-username-msg" hidden="">
             Congrats! <span class="chg-username-query"></span> is available
         <p>
-        <p id="chg-username-failure" hidden="">
-            <span class="chg-username-query"></span> is not available. How about one of these?
+        <p id="chg-username-failure" class="chg-username-msg" hidden="">
+            <strong><span class="chg-username-query"></span></strong> is not available. How about one of these?
         <p>
 
+        <ul id="chg-username-suggestions" hidden="">
+            
+        </ul>
 
     </div>
 
@@ -113,19 +120,21 @@
                 if (result.available.length) {
                     $("#chg-username-success").show();
                     $("#chg-username-failure").hide();
+                    $("#chg-username-suggestions").hide();
                 } else { 
                     $("#chg-username-success").hide();
                     $("#chg-username-failure").show();
 
                     // If username not available, generate suggestions
                     generateSuggestions(usernameQuery, function(suggestions) {
+
                         // Split generated suggestions based on presence of numbers
-                        var availableAlphaNumeric = suggestions.available.filter(
-                            suggestion => { return /\d/.test(suggestion); }
-                        );
-                        var availableAlpha = suggestions.available.filter(
-                            suggestion => { return !/\d/.test(suggestion); }
-                        );
+                        var availableAlphaNumeric = suggestions.available.filter(suggestion => { 
+                            return /\d/.test(suggestion); 
+                        });
+                        var availableAlpha = suggestions.available.filter(suggestion => { 
+                            return !/\d/.test(suggestion); 
+                        });
 
                         console.log(suggestions);
                         console.log(availableAlphaNumeric);
@@ -135,13 +144,24 @@
                         var finalSuggestions = chance.pick(availableAlphaNumeric, 2);
                         finalSuggestions.push(chance.pick(availableAlpha));
 
+                        console.log(finalSuggestions);
+
+                        // Display suggestions
+                        $("#chg-username-suggestions").show();
+                        finalSuggestions.forEach(suggestion => {
+                            var listItem = "<li><p>"+suggestion+"</li></p>";
+                            $("#chg-username-suggestions").append(listItem);
+                        })
                     });
                 }
             });
 
         });
 
-        var wordList = [
+
+        // Note: Bad practice to keep something of this size here:
+        // In production, would move into separate module
+        const wordList = [
             // Borrowed from xkcd password generator which borrowed it from wherever
             "ability","able","aboard","about","above","accept","accident","according",
             "account","accurate","acres","across","act","action","active","activity",
