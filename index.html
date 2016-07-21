@@ -93,20 +93,31 @@
 
         function checkAvailability(usernames, callback) {
             // Accepts a list of string usernames
+            // Passes an object with available and non-available names to callback
+
             var apiUrl = "/coding-challenge/api/user/?username=" + usernames.join(',');
 
-            $.ajax(apiUrl).done(function(data) {
-                // Determine availability of each username processed,
-                // based on existence in returned data array
-                var nonAvailable = [];
-                data.forEach(user => { nonAvailable.push(user.username); });
+            $.ajax({
+                url: apiUrl,
+                success: function(data) {
+                    if (!data) {
+                        alert("Server returned no data. Please try again!");
+                        return;
+                    }
+                    // Determine availability of each username processed,
+                    // based on existence in returned data array
+                    var nonAvailable = data.map(user => user.username);
 
-                var result = {
-                    available: usernames.filter(username => { return !nonAvailable.includes(username); }),
-                    nonAvailable: nonAvailable
-                };
+                    var result = {
+                        available: usernames.filter(username => { return !nonAvailable.includes(username); }),
+                        nonAvailable: nonAvailable
+                    };
 
-                return callback(result);
+                    return callback(result);
+                },
+                error: function(xhr, status) {
+                    alert($.parseJSON(xhr.responseText).Message);
+                }
             });
         }
 
@@ -131,17 +142,31 @@
             checkAvailability(suggestions, callback);
         }
 
+        function badUsername(username) {
+            return /[!$%^&*¢@()+|~=`{}\[\]:";'<>?,\/]/.test(username);
+        }
+
 
         $("#chg-balloon-submit").click(function() {
+
             // Upon submit button click, check initial username for availability
             var usernameQuery = $("#chg-balloon-input").val();
+
+            // Protect against empty queries
             if (!usernameQuery.length)
                 return;
 
+            // Protect against special characters
+            if (badUsername(usernameQuery)) {
+                alert("Please try a username without these characters: !$%^&*¢@()+|~=`{}\[\]:\";'<>?,\/");
+                return;
+            }
+
             checkAvailability([usernameQuery], function(result) {
+                // Check and display username availability for initial query
+
                 console.log(result);
 
-                // Display username availability for initial query
                 $(".chg-username-query").text(usernameQuery);
 
                 if (result.available.length) {
@@ -186,7 +211,6 @@
                         $("#chg-username-suggestions li p").click(e => {
                             $("#chg-balloon-input").val(e.currentTarget.innerText);
                         });
-
 
                     });
                 }
