@@ -31,6 +31,7 @@
         #chg-username-suggestions li {
             border-bottom: 1px solid rgba(197, 197, 197, 0.3);
             text-align: left;
+            cursor: pointer;
         }
         .fa-check-circle {
             color: green;
@@ -175,9 +176,16 @@
                         $("#chg-username-suggestions").show();
 
                         finalSuggestions.forEach(suggestion => {
-                            var listItem = "<li><p>"+suggestion+"</li></p>";
+                            var listItem = "<li><p>"+suggestion+"</p></li>";
                             $("#chg-username-suggestions").append(listItem);
-                        })
+                        });
+
+                        // If a final suggestion is clicked, replace old query with it
+                        $("#chg-username-suggestions li p").click(e => {
+                            $("#chg-balloon-input").val(e.currentTarget.innerText);
+                        });
+
+
                     });
                 }
             });
