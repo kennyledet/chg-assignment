@@ -1,11 +1,24 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <base href="http://chegg-tutors.appspot.com/" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/public/styles.css" />
+    <link rel="stylesheet" type="text/css" href="/myStyles.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <style type="text/css">
+        #seperator {
+            border: 0;
+            height: 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            margin-top: 44px;
+        }
+    </style>
   </head>
+
   <body>
     <div id="chg-balloon-logo-container">
         <img src="/public/img/logo.png" />
@@ -18,13 +31,26 @@
         <button id="chg-balloon-submit">Check availability</button>
     </div>
 
-    <hr>
+    <hr id="seperator">
 
     <div id="chg-balloon-results-container">
-        
+        <p id="chg-username-success" hidden="">Congrats! <span class="chg-username-query"></span> is available<p>
+        <p id="chg-username-failure" hidden=""><span class="chg-username-query"></span> is not available<p>
     </div>
 
     <script type="text/javascript">
+        // The User search API accepts a comma-separated list of usernames, and returns
+        // user data for any matching records
+        // $.ajax("/coding-challenge/api/user/?username=Hillary2016").done(function(data) {
+        //     // This logs Hillary2016's user data, since the username is registered
+        //     console.log(JSON.stringify(data));
+        //   });
+
+        // $.ajax("/coding-challenge/api/user/?username=Trump4Pres,FeelTheBern1").done(function(data) {
+        //     // This logs Trump4Pres's user data, since the username is registered, but
+        //     // no user data for FeelTheBern1, since that username is not currently registered
+        //     console.log(JSON.stringify(data));
+        //   });
 
         function checkAvailability(usernames, callback) {
             // Accepts a list of string usernames
@@ -45,27 +71,23 @@
             });
         }
 
-        // The User search API accepts a comma-separated list of usernames, and returns
-        // user data for any matching records
-
-        $.ajax("/coding-challenge/api/user/?username=Hillary2016").done(function(data) {
-            // This logs Hillary2016's user data, since the username is registered
-            console.log(JSON.stringify(data));
-          });
-
-        $.ajax("/coding-challenge/api/user/?username=Trump4Pres,FeelTheBern1").done(function(data) {
-            // This logs Trump4Pres's user data, since the username is registered, but
-            // no user data for FeelTheBern1, since that username is not currently registered
-            console.log(JSON.stringify(data));
-          });
-
 
         $("#chg-balloon-submit").click(function() {
+            // Upon submit button click, check initial username for availability
             var usernameQuery = $("#chg-balloon-input").val();
-            console.log(usernameQuery);
 
             checkAvailability([usernameQuery], function(result) {
                 console.log(result);
+
+                $(".chg-username-query").text(usernameQuery);
+
+                if (result.available.length) {
+                    $("#chg-username-success").show();
+                    $("#chg-username-failure").hide();
+                } else { 
+                    $("#chg-username-success").hide();
+                    $("#chg-username-failure").show();
+                }
             });
 
         });
