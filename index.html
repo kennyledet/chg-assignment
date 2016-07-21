@@ -136,28 +136,36 @@
         }
 
         function badUsername(username) {
-            return /[!$%^&*¢@()+|~=`{}\[\]:";'<>?,\/]/.test(username);
+            // Protect against bad username queries
+            var result = {bad: false, message: ""};
+
+            if ( /[!$%^&*¢@()+|~=`{}\[\]:";'<>?,\/]/.test(username) ) {
+                result.bad = true;
+                result.message = "Please try a username without these characters: !$%^&*¢@()+|~=`{}\[\]:\";'<>?,\/";
+            } else if (username.length > 18) {
+                result.bad = true;
+                result.message = "Usernames should be no more than 18 characters";
+            } else if (!username.length) {
+                result.bad = true;
+                result.message = "Usernames cannot be blank!";
+            }
+
+            return result;
         }
 
 
         $("#chg-balloon-submit").click(function() {
-
-            // Upon submit button click, check initial username for availability
+            // Upon submission, check initial username provided for availability
             var usernameQuery = $("#chg-balloon-input").val();
 
-            // Protect against empty queries
-            if (!usernameQuery.length)
-                return;
-
-            // Protect against special characters
-            if (badUsername(usernameQuery)) {
-                alert("Please try a username without these characters: !$%^&*¢@()+|~=`{}\[\]:\";'<>?,\/");
+            // Check if username is bad. If so, don't process
+            var badUsernameResult = badUsername(usernameQuery);
+            if (badUsernameResult.bad) {
+                alert(badUsernameResult.message);
                 return;
             }
 
             checkAvailability([usernameQuery], function(result) {
-                // Check and display username availability for initial query
-
                 // console.log(result);
 
                 $(".chg-username-query").text(usernameQuery);
