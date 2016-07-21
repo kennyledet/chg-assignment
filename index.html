@@ -48,10 +48,13 @@
     </div>
 
     <div id="chg-balloon-controls-container">
+
         <p>Enter a username to get started!</p>
+
         <input id="chg-balloon-input" maxlength="2048" placeholder="e.g. BalloonMaster99"
             name="username" autocomplete="off" type="text" value="" />
         <button id="chg-balloon-submit">Check availability</button>
+
     </div>
 
     <hr class="chg-separator">
@@ -78,18 +81,6 @@
     </div>
 
     <script type="text/javascript">
-        // The User search API accepts a comma-separated list of usernames, and returns
-        // user data for any matching records
-        // $.ajax("/coding-challenge/api/user/?username=Hillary2016").done(function(data) {
-        //     // This logs Hillary2016's user data, since the username is registered
-        //     console.log(JSON.stringify(data));
-        //   });
-
-        // $.ajax("/coding-challenge/api/user/?username=Trump4Pres,FeelTheBern1").done(function(data) {
-        //     // This logs Trump4Pres's user data, since the username is registered, but
-        //     // no user data for FeelTheBern1, since that username is not currently registered
-        //     console.log(JSON.stringify(data));
-        //   });
 
         function checkAvailability(usernames, callback) {
             // Accepts a list of string usernames
@@ -116,7 +107,7 @@
                     return callback(result);
                 },
                 error: function(xhr, status) {
-                    alert($.parseJSON(xhr.responseText).Message);
+                    alert($.parseJSON(xhr.responseText).message);
                 }
             });
         }
@@ -137,7 +128,7 @@
                 else
                     suggestions.push(chance.pickone(wordList)+baseQuery);
             }
-            console.log(suggestions);
+            // console.log(suggestions);
 
             checkAvailability(suggestions, callback);
         }
@@ -165,7 +156,7 @@
             checkAvailability([usernameQuery], function(result) {
                 // Check and display username availability for initial query
 
-                console.log(result);
+                // console.log(result);
 
                 $(".chg-username-query").text(usernameQuery);
 
@@ -188,15 +179,15 @@
                             return !/\d/.test(suggestion); 
                         });
 
-                        console.log(suggestions);
-                        console.log(availableAlphaNumeric);
-                        console.log(availableAlpha);
+                        // console.log(suggestions);
+                        // console.log(availableAlphaNumeric);
+                        // console.log(availableAlpha);
 
                         // Pick 3 random final suggestions: 2 alphanumeric, 1 alpha
                         var finalSuggestions = chance.pick(availableAlphaNumeric, 2);
                         finalSuggestions.push(chance.pick(availableAlpha));
 
-                        console.log(finalSuggestions);
+                        // console.log(finalSuggestions);
 
                         // Display final suggestions
                         $("#chg-username-suggestions").empty();
