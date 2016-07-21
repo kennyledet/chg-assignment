@@ -135,6 +135,8 @@
         $("#chg-balloon-submit").click(function() {
             // Upon submit button click, check initial username for availability
             var usernameQuery = $("#chg-balloon-input").val();
+            if (!usernameQuery.length)
+                return;
 
             checkAvailability([usernameQuery], function(result) {
                 console.log(result);
