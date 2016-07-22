@@ -1,0 +1,26 @@
+.chg-separator {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    margin-top: 27px;
+}
+.chg-username-msg {
+    font-size: 17px;
+}
+#chg-username-suggestions {
+    list-style: none;
+    width: 350px;
+    margin-top: 27px;
+}
+#chg-username-suggestions li {
+    border-bottom: 1px solid rgba(197, 197, 197, 0.3);
+    text-align: left;
+    cursor: pointer;
+}
+.fa-check-circle {
+    color: green;
+}
+.fa-exclamation-triangle {
+    color: red;
+}
