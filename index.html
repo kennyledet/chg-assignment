@@ -83,10 +83,12 @@
     </div>
 
     <script type="text/javascript">
+        /* Script only written in same file as index due to setting <base> attribute
+           I generally avoid this practice. */
 
         function checkAvailability(usernames, callback) {
-            // Accepts a list of string usernames
-            // Passes an object with available and non-available names to callback
+            // Accepts a list of string usernames, checks each for availability
+            // Passes an object with available and non-available names to callback function
 
             const apiUrl = "/coding-challenge/api/user/?username=" + usernames.join(',');
 
@@ -97,8 +99,8 @@
                         alert("Server returned no data. Please try again!");
                         return;
                     }
-                    // Determine availability of each username processed,
-                    // based on existence in returned data array
+
+                    // Determine availability of each username based on existence in returned data array
                     var nonAvailable = data.map(user => user.username);
 
                     var result = {
@@ -116,6 +118,8 @@
 
         function generateSuggestions(usernameQuery, callback) {
             // Generates 100 randomized suggestions based on username query
+            // Then checks their availability and forwards the callback function
+
             var suggestions = [];
             var baseQuery = usernameQuery.replace(/[0-9]/g, '');
 
@@ -208,12 +212,13 @@
 
                         // Display final suggestions
                         $("#chg-username-suggestions").empty();
-                        $("#chg-username-suggestions").show();
 
                         finalSuggestions.forEach(suggestion => {
                             var listItem = "<li><p>"+suggestion+"</p></li>";
                             $("#chg-username-suggestions").append(listItem);
                         });
+
+                        $("#chg-username-suggestions").show();
 
                         // If a final suggestion is clicked, replace old query with it
                         $("#chg-username-suggestions li p").click(e => {
